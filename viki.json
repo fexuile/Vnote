@@ -1,7 +1,7 @@
 {
     "brand": "fexuileの博客",
-    "title": "fexuile's online notebook",
-    "favicon": "https://github.com/tamlok/viki/raw/master/resources/viki.ico",
+    "title": "fexuile's online notebook - based on Viki",
+    "favicon": "./logo.jpg",
     "footer": "",
     "show_suffix": false,
     "load_before_search": true,
