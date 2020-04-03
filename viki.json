@@ -1,7 +1,7 @@
 {
     "brand": "fexuileの博客",
     "title": "fexuile's online notebook - based on Viki",
-    "favicon": "./logo.jpg",
+    "favicon": "./LOGO.png",
     "footer": "",
     "show_suffix": false,
     "load_before_search": true,
