@@ -3,3 +3,80 @@ vnote_backup_file_826537664 /home/mleautomaton/VNote/Algorithm/贪心/[NOI2010]�
 
 [Luogu2048]
 
+给你一个数列 $A$ ,现在要在这个数列中选择 $k$ 个不相同的区间,使得区间内所有元素的和的 $\sum$ 最大化,并且要满足区间的长度在 $[L,R]$ 之间.
+
+首先考虑枚举一个区间的左端点,那么不难求出此时可以得到的最大值,然后用堆维护不断删除和加入即可.
+
+```cpp
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+#include<math.h>
+#include<algorithm>
+#include<queue>
+#include<set>
+#include<map>
+#include<iostream>
+using namespace std;
+#define re register
+#define ll long long
+#define mp make_pair
+typedef pair<int,int> pii;
+inline int gi()
+{
+	int f=1,sum=0;char ch=getchar();
+	while(ch>'9' || ch<'0'){if(ch=='-')f=-1;ch=getchar();}
+	while(ch>='0' && ch<='9'){sum=(sum<<3)+(sum<<1)+ch-'0';ch=getchar();}
+	return f*sum;
+}
+const int N=500010;
+int n,k,L,R,A[N],s[N],lg[N];
+struct node{int val,l,pl,pr,pos;};
+bool operator<(const node &a,const node &b){return a.val<b.val;}
+priority_queue<node>q;
+pii mx[N][20];
+void init()
+{
+	for(int i=1;i<=n;i++)mx[i][0]=mp(s[i],i);
+	for(int i=1;i<=19;i++)
+		for(int j=1;j+(1<<i)-1<=n;j++)
+			mx[j][i]=max(mx[j][i-1],mx[j+(1<<i-1)][i-1]);
+}
+pii query(int l,int r)
+{
+	int k=lg[r-l+1];
+	return max(mx[l][k],mx[r-(1<<k)+1][k]);
+}
+int main()
+{
+	n=gi();k=gi();L=gi();R=gi();
+	for(int i=2;i<=n;i++)lg[i]=lg[i>>1]+1;
+	for(int i=1;i<=n;i++)A[i]=gi();
+	for(int i=1;i<=n;i++)s[i]=s[i-1]+A[i];
+	init();
+	for(int i=1;i<=n;i++)
+	{
+		int pl=i+L-1,pr=i+R-1;if(pl>n)break;pr=min(pr,n);
+		pii now=query(pl,pr);
+		q.push((node){now.first-s[i-1],i,pl,pr,now.second});
+	}
+	ll ans=0;
+	while(k--)
+	{
+		node now=q.top();q.pop();
+		ans+=now.val;int P=now.pos;
+		if(P>now.pl)
+		{
+			pii que=query(now.pl,P-1);
+			q.push((node){que.first-s[now.l-1],now.l,now.pl,P-1,que.second});
+		}
+		if(P<now.pr)
+		{
+			pii que=query(P+1,now.pr);
+			q.push((node){que.first-s[now.l-1],now.l,P+1,now.pr,que.second});
+		}
+	}
+	printf("%lld\n",ans);
+	return 0;
+}
+```
